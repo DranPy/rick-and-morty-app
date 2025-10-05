@@ -1,20 +1,21 @@
 import { Column } from "@tanstack/react-table";
 import { DebouncedInput } from "./debouncedInput";
 
-export function Filter({ column }: { column: Column<any, unknown> }) {
+export function Filter<TData>({ column }: { column: Column<TData, unknown> }) {
   const columnFilterValue = column.getFilterValue();
-  const { filterVariant } = column.columnDef.meta ?? {};
+  const { filterVariant, filterOptions } = column.columnDef.meta ?? {};
 
   return filterVariant === "select" ? (
     <select
       onChange={(e) => column.setFilterValue(e.target.value)}
       value={columnFilterValue?.toString()}
     >
-      {/* See faceted column filters example for dynamic select options */}
       <option value="">All</option>
-      <option value="complicated">complicated</option>
-      <option value="relationship">relationship</option>
-      <option value="single">single</option>
+      {filterOptions?.map((option) => (
+        <option key={option} value={option}>
+          {option}
+        </option>
+      ))}
     </select>
   ) : (
     <DebouncedInput
@@ -22,8 +23,7 @@ export function Filter({ column }: { column: Column<any, unknown> }) {
       onChange={(value) => column.setFilterValue(value)}
       placeholder={`Search...`}
       type="text"
-      value={(columnFilterValue ?? "") as string}
+      value={(columnFilterValue ?? "").toString()}
     />
-    // See faceted column filters example for datalist search suggestions
   );
 }

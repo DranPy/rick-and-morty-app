@@ -36,7 +36,6 @@ export const useCharacters = (
     (acc, query) => [...acc, ...(query.data?.data.results ?? [])],
     []
   );
-  console.log({ allResults });
 
   // Slice the results to match requested page size
   const startIndex = (pageIndex * pageSize) % API_PAGE_SIZE;

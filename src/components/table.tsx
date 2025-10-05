@@ -1,12 +1,13 @@
 import {
   ColumnDef,
+  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
+  OnChangeFn,
   PaginationOptions,
   PaginationState,
   useReactTable,
 } from "@tanstack/react-table";
-import { Filters } from "../api/types";
 import { Filter } from "./Filter";
 
 export const DEFAULT_PAGE_INDEX = 0;
@@ -17,8 +18,8 @@ type Props<T> = {
   columns: ColumnDef<T>[];
   pagination: PaginationState;
   paginationOptions: Pick<PaginationOptions, "onPaginationChange" | "rowCount">;
-  filters: Filters<T>;
-  onFilterChange: (dataFilters: Partial<T>) => void;
+  columnFilters: ColumnFiltersState;
+  onColumnFiltersChange: OnChangeFn<ColumnFiltersState>;
 };
 
 export default function Table<T>({
@@ -26,17 +27,17 @@ export default function Table<T>({
   columns,
   pagination,
   paginationOptions,
-  filters,
-  onFilterChange,
+  columnFilters,
+  onColumnFiltersChange,
 }: Props<T>) {
   const table = useReactTable({
     data,
     columns,
-    state: { pagination, columnFilters: filters },
+    state: { pagination, columnFilters },
     ...paginationOptions,
     manualFiltering: true,
     manualPagination: true,
-    onColumnFiltersChange: onFilterChange,
+    onColumnFiltersChange: onColumnFiltersChange,
     getCoreRowModel: getCoreRowModel(),
   });
 
@@ -51,14 +52,7 @@ export default function Table<T>({
                   <th key={header.id} colSpan={header.colSpan}>
                     {header.isPlaceholder ? null : (
                       <>
-                        <div
-                          {...{
-                            className: header.column.getCanSort()
-                              ? "cursor-pointer select-none"
-                              : "",
-                            onClick: header.column.getToggleSortingHandler(),
-                          }}
-                        >
+                        <div>
                           {flexRender(
                             header.column.columnDef.header,
                             header.getContext()
