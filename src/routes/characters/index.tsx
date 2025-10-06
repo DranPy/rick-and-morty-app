@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import Table, {
   DEFAULT_PAGE_INDEX,
   DEFAULT_PAGE_SIZE,
-} from "../../components/table";
+} from "../../components/Table";
 import { CHARACTERS_COLUMNS } from "../../utils/userColumns";
 import { useCharacters } from "../../hooks/useCharacters";
 import * as v from "valibot";
@@ -50,7 +50,7 @@ function RouteComponent() {
     pageIndex: filters.pageIndex ?? DEFAULT_PAGE_INDEX,
     pageSize: filters.pageSize ?? DEFAULT_PAGE_SIZE,
   };
-  const { data } = useCharacters(
+  const { data, refetch } = useCharacters(
     paginationState.pageIndex,
     paginationState.pageSize,
     filters.name ?? "",
@@ -95,6 +95,12 @@ function RouteComponent() {
       />
       <div className="flex items-center gap-2">
         {data?.info.count} records found
+        <button
+          className="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
+          onClick={() => refetch()}
+        >
+          Refresh
+        </button>
         <button
           className="border rounded p-1 disabled:text-gray-500 disabled:cursor-not-allowed"
           onClick={resetFilters}

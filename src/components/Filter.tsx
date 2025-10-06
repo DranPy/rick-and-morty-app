@@ -1,5 +1,5 @@
 import { Column } from "@tanstack/react-table";
-import { DebouncedInput } from "./debouncedInput";
+import { DebouncedInput } from "./DebouncedInput";
 
 export function Filter<TData>({ column }: { column: Column<TData, unknown> }) {
   const columnFilterValue = column.getFilterValue();
